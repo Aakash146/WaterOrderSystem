@@ -16,6 +16,7 @@ import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class OrderService implements IOrderService{
@@ -30,21 +31,20 @@ public class OrderService implements IOrderService{
 
     @Override
     @Transactional
-    public String addNewOrder(OrderDTO orderDTO) {
+    public Order addNewOrder(OrderDTO orderDTO) {
         final List<Order> orders = orderRepository.findByFarmer(orderDTO.getFarmId());
         final LocalDateTime completionTime = orderDTO.getStartDateTime().plusHours(orderDTO.getDuration());
+        final Order order = new Order();
         if(orders.isEmpty()){
-            final Order newOrder = new Order();
-            newOrder.setDuration(orderDTO.getDuration());
-            newOrder.setFarmer(farmerRepository.findByFarmId(orderDTO.getFarmId()));
-            newOrder.setStartDateTime(orderDTO.getStartDateTime());
-            newOrder.setStatus(OrderStatus.REQUESTED);
-            newOrder.setCompletionTime(orderDTO.getStartDateTime().plusHours(orderDTO.getDuration()));
-            orderRepository.save(newOrder);
-            LOGGER.info("New Order created succesfully with details {}", orderDTO.toString());
+            order.setDuration(orderDTO.getDuration());
+            order.setFarmer(farmerRepository.findByFarmId(orderDTO.getFarmId()));
+            order.setStartDateTime(orderDTO.getStartDateTime());
+            order.setStatus(OrderStatus.REQUESTED);
+            order.setCompletionTime(orderDTO.getStartDateTime().plusHours(orderDTO.getDuration()));
+            orderRepository.save(order);
+            LOGGER.info("New Order created succesfully with details {}", order.toString());
         }
         else{
-            final Order order = new Order();
             for (Order lastorder : orders) {
                 if (completionTime.isBefore(lastorder.getStartDateTime()) || orderDTO.getStartDateTime().isAfter(lastorder.getCompletionTime()) || lastorder.getStatus() == OrderStatus.CANCELLED) {
                     order.setDuration(orderDTO.getDuration());
@@ -53,7 +53,7 @@ public class OrderService implements IOrderService{
                     order.setStatus(OrderStatus.REQUESTED);
                     order.setCompletionTime(orderDTO.getStartDateTime().plusHours(orderDTO.getDuration()));
                     orderRepository.save(order);
-                    LOGGER.info("New Order created succesfully with details {}", orderDTO.toString());
+                    LOGGER.info("New Order created succesfully with details {}", order.toString());
                 }
                 else{
                     LOGGER.error("Request Order overlaps with existing order.");
@@ -61,7 +61,7 @@ public class OrderService implements IOrderService{
                 }
             }
         }
-        return "New Order created succesfully";
+        return order;
     }
 
     @Override
@@ -95,6 +95,11 @@ public class OrderService implements IOrderService{
     @Override
     @Transactional
     public List<OrderDetailDTO> getOrderDetails(Long farmId) {
+        boolean exists = orderRepository.existsById(farmId);
+        if(!exists){
+            LOGGER.error("Farmer with farm_id: '"+ farmId + "' don't exists.");
+            throw new IllegalStateException("Farmer with farm_id: '"+ farmId + "' don't exists.");
+        }
         final List<Order> orders = farmerRepository.findByFarmId(farmId).getOrderDetails();
         final List<OrderDetailDTO> dtos = new ArrayList<>();
         orders.forEach(order -> {

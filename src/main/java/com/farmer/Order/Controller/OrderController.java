@@ -2,6 +2,7 @@ package com.farmer.Order.Controller;
 
 import com.farmer.Order.DTO.OrderDTO;
 import com.farmer.Order.DTO.OrderDetailDTO;
+import com.farmer.Order.Entity.Order;
 import com.farmer.Order.Service.IOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +22,7 @@ public class OrderController {
     }
 
     @PostMapping
-    public String registerNewOrder(@RequestBody OrderDTO orderDTO){
+    public Order addNewOrder(@RequestBody OrderDTO orderDTO){
 
         return orderService.addNewOrder(orderDTO);
     }

@@ -25,7 +25,6 @@ public class FarmerService implements IFarmerService {
     private FarmerRepository farmerRepository;
 
 
-
     @Override
     @Transactional
     public String addNewFarmer(FarmerDTO farmerDTO) {
