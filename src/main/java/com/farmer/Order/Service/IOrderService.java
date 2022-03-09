@@ -12,7 +12,7 @@ public interface IOrderService {
 
     Order addNewOrder(OrderDTO orderDTO);
 
-    String cancelOrder(Long orderId);
+    Order cancelOrder(Long orderId);
 
     List<OrderDetailDTO> getOrderDetails(Long farmId);
 }

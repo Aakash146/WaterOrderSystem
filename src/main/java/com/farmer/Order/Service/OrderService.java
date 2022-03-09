@@ -66,7 +66,7 @@ public class OrderService implements IOrderService{
 
     @Override
     @Transactional
-    public String cancelOrder(Long orderId){
+    public Order cancelOrder(Long orderId){
 
         boolean exists = orderRepository.existsById(orderId);
         if(!exists){
@@ -88,14 +88,14 @@ public class OrderService implements IOrderService{
         order.setStatus(OrderStatus.CANCELLED);
         orderRepository.save(order);
         LOGGER.info("Order with order id {} cancelled for farm {}.", order.getOrderId(), order.getFarmer().getFarmId());
-        return "Order Cancelled";
+        return order;
 
     }
 
     @Override
     @Transactional
     public List<OrderDetailDTO> getOrderDetails(Long farmId) {
-        boolean exists = orderRepository.existsById(farmId);
+        boolean exists = farmerRepository.existsById(farmId);
         if(!exists){
             LOGGER.error("Farmer with farm_id: '"+ farmId + "' don't exists.");
             throw new IllegalStateException("Farmer with farm_id: '"+ farmId + "' don't exists.");
