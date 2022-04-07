@@ -5,6 +5,7 @@ import com.farmer.Order.DTO.OrderDetailDTO;
 import com.farmer.Order.Entity.Farmer;
 import com.farmer.Order.Entity.Order;
 import com.farmer.Order.Enum.OrderStatus;
+import com.farmer.Order.Exception.ApiRequestException;
 import com.farmer.Order.Repository.FarmerRepository;
 import com.farmer.Order.Repository.OrderRepository;
 import org.slf4j.Logger;
@@ -57,7 +58,7 @@ public class OrderService implements IOrderService{
                 }
                 else{
                     LOGGER.error("Request Order overlaps with existing order.");
-                    throw new IllegalStateException("Request Order overlaps with existing order.");
+                    throw new ApiRequestException("Request Order overlaps with existing order.");
                 }
             }
         }
@@ -71,19 +72,19 @@ public class OrderService implements IOrderService{
         boolean exists = orderRepository.existsById(orderId);
         if(!exists){
             LOGGER.error("Order with id " + orderId + " does not exist");
-            throw new IllegalStateException("Order with order id " + orderId + " does not exist");
+            throw new ApiRequestException("Order with order id " + orderId + " does not exist");
         }
         final Order order = orderRepository.findByOrderId(orderId);
         if(order.getStatus() == OrderStatus.CANCELLED)
         {
             LOGGER.error("Order with order id {} is already canceled.", order.getOrderId());
-            throw new IllegalStateException("Order with order id " + order.getOrderId() + " is already canceled.");
+            throw new ApiRequestException("Order with order id " + order.getOrderId() + " is already canceled.");
         }else if(order.getStatus() == OrderStatus.INPROGRESS){
             LOGGER.error("Order with order id {} is InProgress so it can't be canceled.", order.getOrderId());
-            throw new IllegalStateException("Order with order id " + order.getOrderId() + " is InProgress so it can't be canceled.");
+            throw new ApiRequestException("Order with order id " + order.getOrderId() + " is InProgress so it can't be canceled.");
         }else if(order.getStatus() == OrderStatus.DELIVERED) {
             LOGGER.error("Order with order id {} is delivered so it can't be canceled.", order.getOrderId());
-            throw new IllegalStateException("Order with order id " + order.getOrderId() + " is delivered so it can't be canceled.");
+            throw new ApiRequestException("Order with order id " + order.getOrderId() + " is delivered so it can't be canceled.");
         }
         order.setStatus(OrderStatus.CANCELLED);
         orderRepository.save(order);
@@ -98,7 +99,7 @@ public class OrderService implements IOrderService{
         boolean exists = farmerRepository.existsById(farmId);
         if(!exists){
             LOGGER.error("Farmer with farm_id: '"+ farmId + "' don't exists.");
-            throw new IllegalStateException("Farmer with farm_id: '"+ farmId + "' don't exists.");
+            throw new ApiRequestException("Farmer with farm_id: '"+ farmId + "' don't exists.");
         }
         final List<Order> orders = farmerRepository.findByFarmId(farmId).getOrderDetails();
         final List<OrderDetailDTO> dtos = new ArrayList<>();

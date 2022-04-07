@@ -3,6 +3,7 @@ package com.farmer.Order.Service;
 import com.farmer.Order.DTO.FarmerDTO;
 import com.farmer.Order.DTO.FarmerDetailDTO;
 import com.farmer.Order.Entity.Farmer;
+import com.farmer.Order.Exception.ApiRequestException;
 import com.farmer.Order.Repository.FarmerRepository;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
@@ -31,7 +32,7 @@ public class FarmerService implements IFarmerService {
         final Farmer farmer = farmerRepository.findByEmail(farmerDTO.getEmail());
         if (Objects.nonNull(farmer)) {
             LOGGER.error("Farmer with email " + farmerDTO.getEmail() + " already exists.");
-            throw new IllegalStateException("Email already Exist");
+            throw new ApiRequestException("Email already Exist");
         }
         final Farmer newFarmer = new Farmer();
         newFarmer.setFirstName(farmerDTO.getFirstName());
@@ -48,7 +49,7 @@ public class FarmerService implements IFarmerService {
         boolean exists = farmerRepository.existsById(farmId);
         if(!exists) {
             LOGGER.error("Farmer with id " + farmId + " does not exist");
-            throw new IllegalStateException("Farmer with id " + farmId + " does not exist");
+            throw new ApiRequestException("Farmer with id " + farmId + " does not exist");
         }
         farmerRepository.deleteById(farmId);
         return "Successfully Deleted.";
