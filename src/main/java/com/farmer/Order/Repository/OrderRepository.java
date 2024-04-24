@@ -13,7 +13,6 @@ public interface OrderRepository extends JpaRepository<Order, UUID> {
 
     Order findByOrderId(UUID orderId);
 
-    @Query(value = "select o from Order o where o.farmId = :farmId")
     List<Order> findByFarmer(UUID farmId);
 
     List<Order> findByStatusAndStartDateTimeLessThanEqual(OrderStatus status,LocalDateTime currentTime);

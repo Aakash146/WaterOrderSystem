@@ -13,14 +13,19 @@ import static org.springframework.security.config.Customizer.withDefaults;
 public class SecurityConfig {
 
     @Bean
-    SecurityFilterChain securityFilterChain(HttpSecurity security) throws Exception {
-        return security
-                .authorizeRequests(auth -> {
-                    auth.antMatchers("/").permitAll();
-                    auth.anyRequest().authenticated();
-                })
+    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
+        http
+                .csrf()
+                .disable()
+                .authorizeRequests()
+                .antMatchers("/").permitAll()
+                .anyRequest()
+                .authenticated()
+                .and()
                 .oauth2Login(withDefaults())
-                .formLogin(withDefaults())
-                .build();
+                .formLogin(withDefaults());
+
+        return http.build();
     }
 }

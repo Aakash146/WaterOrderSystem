@@ -18,10 +18,10 @@ public class HomeController {
         return "Welcome To Water Order Application.";
     }
 
-    @GetMapping(path = "login")
+    @GetMapping(path = "secured")
     public String login(){
-        OAuth2AuthorizedClient authorizedClient = authorizedClientService.loadAuthorizedClient("google", "your-username");
-        String accessToken = authorizedClient.getAccessToken().getTokenValue();
+//        OAuth2AuthorizedClient authorizedClient = authorizedClientService.loadAuthorizedClient("google", "your-username");
+//        String accessToken = authorizedClient.getAccessToken().getTokenValue();
         return "Successfully logged in.";
     }
 }
