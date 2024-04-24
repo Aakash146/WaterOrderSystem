@@ -6,7 +6,9 @@ import com.farmer.Order.Entity.Order;
 import com.farmer.Order.Service.IOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping(path ="api/order")
@@ -16,7 +18,7 @@ public class OrderController {
     private IOrderService orderService;
 
     @GetMapping(path = "{farmId}")
-    public List<OrderDetailDTO> getOrderDetails(@PathVariable("farmId") Long farmId){
+    public List<OrderDetailDTO> getOrderDetails(@PathVariable("farmId") UUID farmId){
 
         return orderService.getOrderDetails(farmId);
     }
@@ -28,7 +30,7 @@ public class OrderController {
     }
 
     @PutMapping(path = "{orderId}")
-    public Order cancelOrder(@PathVariable("orderId") Long id){
+    public Order cancelOrder(@PathVariable("orderId") UUID id){
 
         return orderService.cancelOrder(id);
     }

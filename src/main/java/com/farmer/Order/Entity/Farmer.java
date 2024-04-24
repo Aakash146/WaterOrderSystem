@@ -1,7 +1,10 @@
 package com.farmer.Order.Entity;
 
 import javax.persistence.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 
 @Entity
 @Table(name = "farmer")
@@ -11,7 +14,7 @@ public class Farmer {
     @SequenceGenerator(name = "farmer_sequence", sequenceName = "farmer_sequence", allocationSize =  1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "farmer_sequence")
     @Column(name = "farm_id")
-    private Long farmId;
+    private UUID farmId;
 
     @Column(name = "first_name", nullable = false)
     private String firstName;
@@ -32,7 +35,7 @@ public class Farmer {
         // Do Nothing
     }
 
-    public Farmer(final Long farmId, final String firstName, final String lastName, final String email, final List<Order> orderDetails) {
+    public Farmer(final UUID farmId, final String firstName, final String lastName, final String email, final List<Order> orderDetails) {
         this.farmId = farmId;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -40,11 +43,11 @@ public class Farmer {
         this.orderDetails = orderDetails;
     }
 
-    public Long getFarmId() {
+    public UUID getFarmId() {
         return farmId;
     }
 
-    public void setFarmId(Long farmId) {
+    public void setFarmId(UUID farmId) {
         this.farmId = farmId;
     }
 

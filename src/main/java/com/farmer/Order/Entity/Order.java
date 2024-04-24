@@ -1,9 +1,11 @@
 package com.farmer.Order.Entity;
 
 import com.farmer.Order.Enum.OrderStatus;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.UUID;
 
 @Entity
 @Table(name = "order_details")
@@ -13,7 +15,7 @@ public class Order {
     @SequenceGenerator(name = "order_sequence", sequenceName = "order_sequence", allocationSize =  1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "order_sequence")
     @Column(name = "order_id")
-    private Long orderId;
+    private UUID orderId;
 
     @Column(name = "start_date_time", nullable = false)
     private LocalDateTime startDateTime;
@@ -36,7 +38,7 @@ public class Order {
         // Do Nothing
     }
 
-    public Order(final Long orderId, final LocalDateTime startDateTime, final Integer duration, final LocalDateTime completionTime, final OrderStatus status, final Farmer farmer) {
+    public Order(final UUID orderId, final LocalDateTime startDateTime, final Integer duration, final LocalDateTime completionTime, final OrderStatus status, final Farmer farmer) {
         this.orderId = orderId;
         this.startDateTime = startDateTime;
         this.duration = duration;
@@ -45,11 +47,11 @@ public class Order {
         this.farmer = farmer;
     }
 
-    public Long getOrderId() {
+    public UUID getOrderId() {
         return orderId;
     }
 
-    public void setOrderId(Long orderId) {
+    public void setOrderId(UUID orderId) {
         this.orderId = orderId;
     }
 

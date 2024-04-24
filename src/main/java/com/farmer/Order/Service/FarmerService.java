@@ -5,8 +5,8 @@ import com.farmer.Order.DTO.FarmerDetailDTO;
 import com.farmer.Order.Entity.Farmer;
 import com.farmer.Order.Exception.ApiRequestException;
 import com.farmer.Order.Repository.FarmerRepository;
-import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +14,7 @@ import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
+import java.util.UUID;
 
 
 @Service
@@ -45,7 +45,7 @@ public class FarmerService implements IFarmerService {
 
     @Override
     @Transactional
-    public String deleteFarmer(Long farmId){
+    public String deleteFarmer(UUID farmId){
         boolean exists = farmerRepository.existsById(farmId);
         if(!exists) {
             LOGGER.error("Farmer with id " + farmId + " does not exist");

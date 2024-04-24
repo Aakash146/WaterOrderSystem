@@ -4,14 +4,15 @@ import com.farmer.Order.Enum.OrderStatus;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 public class OrderDetailDTO {
 
     @JsonProperty("order_id")
-    private Long orderId;
+    private UUID orderId;
 
     @JsonProperty("farm_id")
-    private Long farmId;
+    private UUID farmId;
 
     @JsonProperty("start_date_time")
     private LocalDateTime startDateTime;
@@ -25,19 +26,19 @@ public class OrderDetailDTO {
     @JsonProperty("status")
     private OrderStatus status;
 
-    public Long getOrderId() {
+    public UUID getOrderId() {
         return orderId;
     }
 
-    public void setOrderId(Long orderId) {
+    public void setOrderId(UUID orderId) {
         this.orderId = orderId;
     }
 
-    public Long getFarmId() {
+    public UUID getFarmId() {
         return farmId;
     }
 
-    public void setFarmId(Long farmId) {
+    public void setFarmId(UUID farmId) {
         this.farmId = farmId;
     }
 

@@ -2,7 +2,6 @@ package com.farmer.Order.Service;
 
 import com.farmer.Order.DTO.OrderDTO;
 import com.farmer.Order.DTO.OrderDetailDTO;
-import com.farmer.Order.Entity.Farmer;
 import com.farmer.Order.Entity.Order;
 import com.farmer.Order.Enum.OrderStatus;
 import com.farmer.Order.Exception.ApiRequestException;
@@ -17,7 +16,7 @@ import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
+import java.util.UUID;
 
 @Service
 public class OrderService implements IOrderService{
@@ -67,7 +66,7 @@ public class OrderService implements IOrderService{
 
     @Override
     @Transactional
-    public Order cancelOrder(Long orderId){
+    public Order cancelOrder(UUID orderId){
 
         boolean exists = orderRepository.existsById(orderId);
         if(!exists){
@@ -95,13 +94,14 @@ public class OrderService implements IOrderService{
 
     @Override
     @Transactional
-    public List<OrderDetailDTO> getOrderDetails(Long farmId) {
+    public List<OrderDetailDTO> getOrderDetails(UUID farmId) {
         boolean exists = farmerRepository.existsById(farmId);
         if(!exists){
             LOGGER.error("Farmer with farm_id: '"+ farmId + "' don't exists.");
             throw new ApiRequestException("Farmer with farm_id: '"+ farmId + "' don't exists.");
         }
         final List<Order> orders = farmerRepository.findByFarmId(farmId).getOrderDetails();
+        System.out.println(orders);
         final List<OrderDetailDTO> dtos = new ArrayList<>();
         orders.forEach(order -> {
             final OrderDetailDTO dto = new OrderDetailDTO();

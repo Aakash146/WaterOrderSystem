@@ -3,11 +3,12 @@ package com.farmer.Order.DTO;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 public class OrderDTO {
 
     @JsonProperty("farm_id")
-    private Long farmId;
+    private UUID farmId;
 
     @JsonProperty("start_date_time")
     private LocalDateTime startDateTime;
@@ -15,11 +16,11 @@ public class OrderDTO {
     @JsonProperty("duration")
     private Integer duration;
 
-    public Long getFarmId() {
+    public UUID getFarmId() {
         return farmId;
     }
 
-    public void setFarmId(Long farmId) {
+    public void setFarmId(UUID farmId) {
         this.farmId = farmId;
     }
 

@@ -2,10 +2,12 @@ package com.farmer.Order.DTO;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.UUID;
+
 public class FarmerDetailDTO {
 
     @JsonProperty("farmer_id")
-    private Long farmId;
+    private UUID farmId;
 
     @JsonProperty("first_name")
     private String firstName;
@@ -19,11 +21,11 @@ public class FarmerDetailDTO {
     @JsonProperty("full_name")
     private String fullName;
 
-    public Long getFarmId() {
+    public UUID getFarmId() {
         return farmId;
     }
 
-    public void setFarmId(Long farmId) {
+    public void setFarmId(UUID farmId) {
         this.farmId = farmId;
     }
 

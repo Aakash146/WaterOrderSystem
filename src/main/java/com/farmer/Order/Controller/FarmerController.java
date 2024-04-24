@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping(path = "api/farm")
@@ -28,7 +29,7 @@ public class FarmerController {
     }
 
     @DeleteMapping(path = "{farmId}")
-    public String deleteFarmer(@PathVariable("farmId") Long farmId){
+    public String deleteFarmer(@PathVariable("farmId") UUID farmId){
 
         return farmerService.deleteFarmer(farmId);
     }
