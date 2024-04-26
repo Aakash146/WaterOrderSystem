@@ -7,6 +7,7 @@ import com.farmer.Order.Enum.OrderStatus;
 import com.farmer.Order.Exception.ApiRequestException;
 import com.farmer.Order.Repository.FarmerRepository;
 import com.farmer.Order.Repository.OrderRepository;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class OrderService implements IOrderService{
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OrderService.class);
@@ -37,7 +39,7 @@ public class OrderService implements IOrderService{
         final Order order = new Order();
         if(orders.isEmpty()){
             order.setDuration(orderDTO.getDuration());
-            order.setFarmer(farmerRepository.findByFarmId(orderDTO.getFarmId()));
+            order.setFarmer(farmerRepository.findByFarmId(orderDTO.getFarmId()).get());
             order.setStartDateTime(orderDTO.getStartDateTime());
             order.setStatus(OrderStatus.REQUESTED);
             order.setCompletionTime(orderDTO.getStartDateTime().plusHours(orderDTO.getDuration()));
@@ -48,7 +50,7 @@ public class OrderService implements IOrderService{
             for (Order lastorder : orders) {
                 if (completionTime.isBefore(lastorder.getStartDateTime()) || orderDTO.getStartDateTime().isAfter(lastorder.getCompletionTime()) || lastorder.getStatus() == OrderStatus.CANCELLED) {
                     order.setDuration(orderDTO.getDuration());
-                    order.setFarmer(farmerRepository.findByFarmId(orderDTO.getFarmId()));
+                    order.setFarmer(farmerRepository.findByFarmId(orderDTO.getFarmId()).get());
                     order.setStartDateTime(orderDTO.getStartDateTime());
                     order.setStatus(OrderStatus.REQUESTED);
                     order.setCompletionTime(orderDTO.getStartDateTime().plusHours(orderDTO.getDuration()));
@@ -97,10 +99,10 @@ public class OrderService implements IOrderService{
     public List<OrderDetailDTO> getOrderDetails(UUID farmId) {
         boolean exists = farmerRepository.existsById(farmId);
         if(!exists){
-            LOGGER.error("Farmer with farm_id: '"+ farmId + "' don't exists.");
-            throw new ApiRequestException("Farmer with farm_id: '"+ farmId + "' don't exists.");
+            LOGGER.error("Farmer with farmer_id: '"+ farmId + "' don't exists.");
+            throw new ApiRequestException("Farmer with farmer_id: '"+ farmId + "' don't exists.");
         }
-        final List<Order> orders = farmerRepository.findByFarmId(farmId).getOrderDetails();
+        final List<Order> orders = farmerRepository.findByFarmId(farmId).get().getOrderDetails();
         System.out.println(orders);
         final List<OrderDetailDTO> dtos = new ArrayList<>();
         orders.forEach(order -> {

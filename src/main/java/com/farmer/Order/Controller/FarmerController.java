@@ -2,8 +2,11 @@ package com.farmer.Order.Controller;
 
 import com.farmer.Order.DTO.FarmerDTO;
 import com.farmer.Order.DTO.FarmerDetailDTO;
+import com.farmer.Order.Entity.Farmer;
+import com.farmer.Order.Enum.Role;
 import com.farmer.Order.Service.IFarmerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,15 +20,16 @@ public class FarmerController {
     private IFarmerService farmerService;
 
     @GetMapping
-    public List<FarmerDetailDTO> getAllFarmerDetails(){
+    public ResponseEntity<List<FarmerDetailDTO>> getAllFarmerDetails(){
 
-        return farmerService.getAllFarmerDetail();
+        return ResponseEntity.ok(farmerService.getAllFarmerDetail());
     }
 
     @PostMapping
-    public String registerNewFarmer(@RequestBody FarmerDTO farmerDTO){
+    public ResponseEntity<Farmer> registerNewFarmer(@RequestBody FarmerDTO farmerDTO){
 
-        return farmerService.addNewFarmer(farmerDTO);
+        farmerDTO.setRole(Role.USER);
+        return ResponseEntity.ok(farmerService.addNewFarmer(farmerDTO));
     }
 
     @DeleteMapping(path = "{farmId}")

@@ -5,19 +5,19 @@ import com.farmer.Order.DTO.FarmerDetailDTO;
 import com.farmer.Order.Entity.Farmer;
 import com.farmer.Order.Exception.ApiRequestException;
 import com.farmer.Order.Repository.FarmerRepository;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 
 @Service
+@RequiredArgsConstructor
 public class FarmerService implements IFarmerService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FarmerService.class);
@@ -28,9 +28,9 @@ public class FarmerService implements IFarmerService {
 
     @Override
     @Transactional
-    public String addNewFarmer(FarmerDTO farmerDTO) {
-        final Farmer farmer = farmerRepository.findByEmail(farmerDTO.getEmail());
-        if (Objects.nonNull(farmer)) {
+    public Farmer addNewFarmer(FarmerDTO farmerDTO) {
+        final Optional<Farmer> farmer = farmerRepository.findByEmail(farmerDTO.getEmail());
+        if (farmer.isPresent()) {
             LOGGER.error("Farmer with email " + farmerDTO.getEmail() + " already exists.");
             throw new ApiRequestException("Email already Exist");
         }
@@ -38,9 +38,12 @@ public class FarmerService implements IFarmerService {
         newFarmer.setFirstName(farmerDTO.getFirstName());
         newFarmer.setLastName(farmerDTO.getLastName());
         newFarmer.setEmail(farmerDTO.getEmail());
+        newFarmer.setRole(farmerDTO.getRole());
+        newFarmer.setPassword(farmerDTO.getPassword());
         LOGGER.info("Farmer with email "+ farmerDTO.getEmail() + " added.");
         farmerRepository.save(newFarmer);
-        return "Succesfully Added";
+        Optional<Farmer> savedFarmer = farmerRepository.findByEmail(farmerDTO.getEmail());
+        return savedFarmer.orElseThrow(() -> new UsernameNotFoundException("Farmer not found."));
     }
 
     @Override

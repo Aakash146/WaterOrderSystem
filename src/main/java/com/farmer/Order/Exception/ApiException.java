@@ -7,7 +7,6 @@ import java.time.LocalDateTime;
 public class ApiException {
 
     private final String message;
-    //private final Throwable throwable;
     private final HttpStatus httpStatus;
     private final LocalDateTime timeStamp;
 
@@ -21,10 +20,6 @@ public class ApiException {
     public String getMessage() {
         return message;
     }
-
-//    public Throwable getThrowable() {
-//        return throwable;
-//    }
 
     public HttpStatus getHttpStatus() {
         return httpStatus;

@@ -1,19 +1,33 @@
 package com.farmer.Order.Entity;
 
+import com.farmer.Order.Enum.Role;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.GenericGenerator;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 
 @Entity
 @Table(name = "farmer")
-public class Farmer {
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class Farmer implements UserDetails {
 
     @Id
-    @SequenceGenerator(name = "farmer_sequence", sequenceName = "farmer_sequence", allocationSize =  1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "farmer_sequence")
-    @Column(name = "farm_id")
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "farmer_generator")
+    @GenericGenerator(name = "farmer_generator", strategy = "org.hibernate.id.UUIDGenerator")
+    @Column(name = "farmer_id")
     private UUID farmId;
 
     @Column(name = "first_name", nullable = false)
@@ -25,15 +39,18 @@ public class Farmer {
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 
+    @Column(name = "password", nullable = false)
+    private String password;
+
+    @Column(name = "role", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
     @Transient
     private String fullName;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "farmer", orphanRemoval = true)
     private List<Order> orderDetails = new ArrayList<>();
-
-    public Farmer() {
-        // Do Nothing
-    }
 
     public Farmer(final UUID farmId, final String firstName, final String lastName, final String email, final List<Order> orderDetails) {
         this.farmId = farmId;
@@ -43,73 +60,43 @@ public class Farmer {
         this.orderDetails = orderDetails;
     }
 
-    public UUID getFarmId() {
-        return farmId;
-    }
-
-    public void setFarmId(UUID farmId) {
-        this.farmId = farmId;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
     public String getFullName() {
         return firstName + " " + lastName;
     }
 
-    public List<Order> getOrderDetails() {
-        return orderDetails;
-    }
-
-    public void setOrderDetails(List<Order> orderDetails) {
-        this.orderDetails = orderDetails;
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(role.name()));
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Farmer that = (Farmer) o;
-        return Objects.equals(farmId, that.farmId);
+    public String getPassword() {
+        return password;
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(farmId);
+    public String getUsername() {
+        return email;
     }
 
     @Override
-    public String toString() {
-        return "FarmerDetails{" +
-                "farmId=" + farmId +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", email='" + email + '\'' +
-                ", fullName='" + fullName + '\'' +
-                ", orderDetails=" + orderDetails +
-                '}';
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }
 

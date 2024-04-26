@@ -5,6 +5,7 @@ import com.farmer.Order.DTO.OrderDetailDTO;
 import com.farmer.Order.Entity.Order;
 import com.farmer.Order.Service.IOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,20 +19,20 @@ public class OrderController {
     private IOrderService orderService;
 
     @GetMapping(path = "{farmId}")
-    public List<OrderDetailDTO> getOrderDetails(@PathVariable("farmId") UUID farmId){
+    public ResponseEntity<List<OrderDetailDTO>> getOrderDetails(@PathVariable("farmId") UUID farmId){
 
-        return orderService.getOrderDetails(farmId);
+        return ResponseEntity.ok(orderService.getOrderDetails(farmId));
     }
 
     @PostMapping
-    public Order addNewOrder(@RequestBody OrderDTO orderDTO){
+    public ResponseEntity<Order> addNewOrder(@RequestBody OrderDTO orderDTO){
 
-        return orderService.addNewOrder(orderDTO);
+        return ResponseEntity.ok(orderService.addNewOrder(orderDTO));
     }
 
     @PutMapping(path = "{orderId}")
-    public Order cancelOrder(@PathVariable("orderId") UUID id){
+    public ResponseEntity<Order> cancelOrder(@PathVariable("orderId") UUID id){
 
-        return orderService.cancelOrder(id);
+        return ResponseEntity.ok(orderService.cancelOrder(id));
     }
 }

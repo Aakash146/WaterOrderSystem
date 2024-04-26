@@ -1,8 +1,13 @@
 package com.farmer.Order.DTO;
 
+import com.farmer.Order.Enum.Role;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
+import lombok.Data;
 
 
+@Data
+@Builder
 public class FarmerDTO {
 
     @JsonProperty("first_name")
@@ -14,27 +19,9 @@ public class FarmerDTO {
     @JsonProperty("email")
     private String email;
 
-    public String getFirstName() {
-        return firstName;
-    }
+    @JsonProperty("password")
+    private String password;
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
+    @JsonProperty("role")
+    private Role role;
 }
